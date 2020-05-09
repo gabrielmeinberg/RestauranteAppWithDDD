@@ -12,10 +12,7 @@ import 'package:restaurant_app_with_ddd/domain_layer/models/product_model.dart';
 class ProductDetails extends StatefulWidget {
   final ProductModel product;
 
-  ProductDetails(
-      {Key key,
-      @required this.product})
-      : super(key: key);
+  ProductDetails({Key key, @required this.product}) : super(key: key);
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -73,7 +70,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
-                      "${foods[1]['img']}",
+                      "assets/food1.jpeg",
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -253,9 +250,44 @@ class _ProductDetailsState extends State<ProductDetails> {
             ],
           ),
           color: Theme.of(context).accentColor,
-          onPressed: () {Provider.of<AppProvider>(context, listen: false).addItemCart(widget.product, 1);},
+          onPressed: () {
+            Provider.of<AppProvider>(context, listen: false)
+                .addItemCart(widget.product, 1);
+            addCartConfirm(context);
+          },
         ),
       ),
+    );
+  }
+
+  addCartConfirm(BuildContext context) {
+    Widget okButton = FlatButton(
+      child: Text("Fechar"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget goCart = FlatButton(
+      child: Text("Carrinho de Compras"),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Provider.of<AppProvider>(context, listen: false).updatePage(3);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Produto Adicionado ao Carrinho"),
+      content: Text("Você Pode Finalizar a Compra no Carrinho de Compras"),
+      actions: [goCart, okButton],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

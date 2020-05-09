@@ -266,7 +266,7 @@ class _CheckoutState extends State<Checkout> {
                         ),
                       ),
                       onPressed: () {
-                        Provider.of<AppProvider>(context, listen: false).makeOrder(cart);
+                        checkoutConfirm(context, cart);
                       },
                     ),
                   ),
@@ -277,6 +277,38 @@ class _CheckoutState extends State<Checkout> {
           height: 130,
         ),
       ),
+    );
+  }
+
+  checkoutConfirm(BuildContext context, CartModel cart) {
+    Widget okButton = FlatButton(
+      child: Text("Fechar"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget goCart = FlatButton(
+      child: Text("Confirmar"),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Provider.of<AppProvider>(context, listen: false).makeOrder(cart);
+        Provider.of<AppProvider>(context, listen: false).updatePage(0);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Finalizar Pedido"),
+      content: Text("Você confirmar Pedido (Conferiu endereço?)"),
+      actions: [goCart, okButton],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

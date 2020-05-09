@@ -34,24 +34,32 @@ class _CartScreenState extends State<CartScreen>
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text('Finalizar'),
-        tooltip: "Checkout",
-        icon: Icon(
-          Icons.arrow_forward,
-        ),
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return Checkout();
-              },
-            ),
-          );
-        },
-        heroTag: Object(),
-      ),
+      floatingActionButton: _getCheckout(context),
     );
+  }
+
+  Widget _getCheckout(BuildContext context) {
+    CartModel cart = Provider.of<AppProvider>(context).cart;
+    if (cart.cart.length != 0){
+      return FloatingActionButton.extended(
+          label: Text('Finalizar'),
+          tooltip: "Checkout",
+          icon: Icon(
+            Icons.arrow_forward,
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return Checkout();
+                },
+              ),
+            );
+          },
+          heroTag: Object(),
+        );}else{
+          return Container();
+        }
   }
 
   @override

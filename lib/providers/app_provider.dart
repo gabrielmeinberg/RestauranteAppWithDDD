@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_app_with_ddd/application_layer/use_case/cart_use_case.dart';
+import 'package:restaurant_app_with_ddd/application_layer/use_case/order_use_case.dart';
 import 'package:restaurant_app_with_ddd/application_layer/use_case/product_use_case.dart';
 import 'package:restaurant_app_with_ddd/domain_layer/models/cart_model.dart';
+import 'package:restaurant_app_with_ddd/domain_layer/models/order_model.dart';
 import 'package:restaurant_app_with_ddd/domain_layer/models/product_model.dart';
 import 'package:restaurant_app_with_ddd/util/const.dart';
-import 'package:restaurant_app_with_ddd/widgets/cart_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppProvider extends ChangeNotifier{
@@ -14,6 +15,7 @@ class AppProvider extends ChangeNotifier{
     checkTheme();
     getFoods();
     getCart();
+    getOrderModel();
   }
 
 
@@ -22,6 +24,9 @@ class AppProvider extends ChangeNotifier{
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   List<ProductModel> foods;
   CartModel cart;
+  List<OrderModel> orderModelList;
+  PageController pageController = PageController();
+  int page = 0;
 
   void setKey(value) {
     key = value;
@@ -102,6 +107,19 @@ class AppProvider extends ChangeNotifier{
   Future<void> makeOrder(CartModel cart) async {
     await Future.wait([CartUserCase().makeOrder(cart)]);
     getCart();
+    getOrderModel();
+    notifyListeners();
+  }
+
+  Future<void> getOrderModel() async {
+    List<List<OrderModel>> orderModelFuture = await Future.wait([OrderUseCase().getOrder()]);
+    orderModelList = orderModelFuture.first;
+    notifyListeners();
+  }
+
+  void updatePage(int pageReturn){
+    page = pageReturn;
+    pageController.jumpToPage(pageReturn);
     notifyListeners();
   }
   

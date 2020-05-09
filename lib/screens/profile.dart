@@ -177,7 +177,7 @@ class _ProfileState extends State<Profile> {
                 "1278 Loving Acres RoadKansas City, MO 64110",
               ),
             ),
-
+            /*
             ListTile(
               title: Text(
                 "Gender",
@@ -205,7 +205,7 @@ class _ProfileState extends State<Profile> {
                 "April 9, 1995",
               ),
             ),
-
+            */
              MediaQuery.of(context).platformBrightness == Brightness.dark
                  ? SizedBox()
                  : ListTile(

@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app_with_ddd/providers/app_provider.dart';
 import 'package:restaurant_app_with_ddd/screens/cart.dart';
 import 'package:restaurant_app_with_ddd/screens/favorite_screen.dart';
 import 'package:restaurant_app_with_ddd/screens/home.dart';
+import 'package:restaurant_app_with_ddd/screens/order_screen.dart';
 //import 'package:restaurant_app_with_ddd/screens/notifications.dart';
 import 'package:restaurant_app_with_ddd/screens/profile.dart';
 import 'package:restaurant_app_with_ddd/screens/search.dart';
@@ -16,11 +19,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  PageController _pageController;
-  int _page = 0;
 
   @override
   Widget build(BuildContext context) {
+    PageController _pageController = Provider.of<AppProvider>(context).pageController;
+    int _page = Provider.of<AppProvider>(context).page;
     return WillPopScope(
       onWillPop: ()=>Future.value(false),
       child: Scaffold(
@@ -59,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
           onPageChanged: onPageChanged,
           children: <Widget>[
             Home(),
-            FavoriteScreen(),
+            OrderScreen(),
             SearchScreen(),
             CartScreen(),
             Profile(),
@@ -159,25 +162,9 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void navigationTapped(int page) {
-    _pageController.jumpToPage(page);
-  }
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
-  }
 
   void onPageChanged(int page) {
-    setState(() {
-      this._page = page;
-    });
+    Provider.of<AppProvider>(context, listen:false).updatePage(page);
   }
 }
